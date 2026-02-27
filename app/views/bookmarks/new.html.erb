@@ -1,17 +1,13 @@
-<h1>Add a movie to <%= @list.name %></h1>
+<div class="container py-5" style="max-width: 640px;">
+  <h1 class="mb-4">Add a movie to <%= @list.name %></h1>
 
-<%= form_with model: [@list, @bookmark] do |f| %>
-  <div>
-    <%= f.label :movie_id, "Movie" %>
-    <%= f.collection_select :movie_id, Movie.all, :id, :title %>
+  <%= simple_form_for [@list, @bookmark] do |f| %>
+    <%= f.association :movie, prompt: "Select a movie" %>
+    <%= f.input :comment, placeholder: "Write a comment (min 6 chars)" %>
+    <%= f.submit "Add bookmark", class: "btn btn-primary" %>
+  <% end %>
+
+  <div class="mt-3">
+    <%= link_to "Back to list", list_path(@list), class: "btn btn-outline-secondary" %>
   </div>
-
-  <div>
-    <%= f.label :comment %>
-    <%= f.text_field :comment %>
-  </div>
-
-  <%= f.submit "Add bookmark" %>
-<% end %>
-
-<%= link_to "Back to list", list_path(@list) %>
+</div>

@@ -1,16 +1,39 @@
-<h1><%= @list.name %></h1>
+<div class="container py-5">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h1 class="mb-1"><%= @list.name %></h1>
+      <p class="text-muted mb-0"><%= pluralize(@list.bookmarks.count, "movie") %> in this list</p>
+    </div>
+    <%= link_to "Add a movie", new_list_bookmark_path(@list), class: "btn btn-primary" %>
+  </div>
 
-<%= link_to "Add a movie", new_list_bookmark_path(@list) %>
+  <div class="row g-3">
+    <% @list.bookmarks.each do |bookmark| %>
+      <div class="col-12 col-md-6">
+        <div class="card h-100 shadow-sm">
+          <% if bookmark.movie.poster_url.present? %>
+            <img src="<%= bookmark.movie.poster_url %>" class="card-img-top" alt="<%= bookmark.movie.title %>">
+          <% end %>
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+              <h2 class="h5 mb-0"><%= bookmark.movie.title %></h2>
+              <span class="badge text-bg-warning"><%= bookmark.movie.rating %></span>
+            </div>
+            <p class="mb-2"><%= bookmark.movie.overview %></p>
+            <p class="mb-0 text-muted"><i class="fa-solid fa-quote-left me-1"></i><%= bookmark.comment %></p>
+          </div>
+          <div class="card-footer bg-white border-0 pt-0">
+            <%= link_to "Delete",
+                        bookmark_path(bookmark),
+                        class: "btn btn-sm btn-outline-danger",
+                        data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
 
-<ul>
-  <% @list.bookmarks.each do |bookmark| %>
-    <li>
-      <%= bookmark.movie.title %> — <%= bookmark.comment %>
-      <%= link_to "Delete",
-                  bookmark_path(bookmark),
-                  data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
-    </li>
-  <% end %>
-</ul>
-
-<%= link_to "Back to lists", lists_path %>
+  <div class="mt-4">
+    <%= link_to "Back to lists", lists_path, class: "btn btn-outline-secondary" %>
+  </div>
+</div>
